@@ -1,0 +1,17 @@
+﻿[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "csv-data-auditor"
+version = "0.1.0"
+description = "A small CLI tool for checking common CSV data quality issues."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+csv-data-auditor = "csv_data_auditor.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
