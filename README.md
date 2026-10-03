@@ -38,3 +38,17 @@ python -m unittest discover -s tests
 
 - Python 3.10 or newer
 - No third-party runtime dependencies
+
+## Required columns
+
+You can check whether specific columns exist in the CSV file:
+
+```powershell
+python -m csv_data_auditor.cli .\samples\customers.csv --required name email age id
+```
+
+Example:
+
+```text
+Missing required columns: id
+```

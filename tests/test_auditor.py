@@ -36,5 +36,21 @@ class AuditCsvTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "header row"):
                 audit_csv(path)
 
+    def test_reports_missing_required_columns(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = Path(temp_dir) / "sample.csv"
+            path.write_text(
+                "name,email\n"
+                "Alice,alice@example.com\n",
+                encoding="utf-8",
+            )
+
+            result = audit_csv(
+                path,
+                required_columns=["name", "email", "age"],
+            )
+
+            self.assertEqual(result.missing_required_columns, ("age",))
+
 if __name__ == "__main__":
     unittest.main()
