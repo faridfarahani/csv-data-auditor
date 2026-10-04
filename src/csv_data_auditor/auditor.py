@@ -3,6 +3,7 @@
 import csv
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Iterable
 
 
 @dataclass(frozen=True)
@@ -13,9 +14,13 @@ class AuditResult:
     columns: tuple[str, ...]
     empty_cells: int
     duplicate_rows: int
+    missing_required_columns: tuple[str, ...]
 
 
-def audit_csv(path: str | Path) -> AuditResult:
+def audit_csv(
+    path: str | Path,
+    required_columns: Iterable[str] | None = None,
+) -> AuditResult:
     csv_path = Path(path)
 
     if not csv_path.exists():
@@ -47,6 +52,11 @@ def audit_csv(path: str | Path) -> AuditResult:
         else:
             seen.add(values)
 
+    required = tuple(required_columns or ())
+    missing_required_columns = tuple(
+        column for column in required if column not in columns
+    )
+
     return AuditResult(
         file_name=csv_path.name,
         row_count=len(rows),
@@ -54,4 +64,5 @@ def audit_csv(path: str | Path) -> AuditResult:
         columns=columns,
         empty_cells=empty_cells,
         duplicate_rows=duplicate_rows,
+        missing_required_columns=missing_required_columns,
     )
